@@ -13,6 +13,11 @@ const authSlice = createSlice({
       error: false,
       success: false,
     },
+    loginFB: {
+      currentUser: null,
+      isfetching: false,
+      error: false,
+    },
   },
   reducers: {
     loginStart: (state) => {
@@ -26,6 +31,20 @@ const authSlice = createSlice({
     loginFailed: (state) => {
       state.login.isfetching = false;
       state.login.error = true;
+    },
+    //fb
+
+    loginFBStart: (state) => {
+      state.loginFB.isfetching = true;
+    },
+    loginFBSuccess: (state, action) => {
+      state.loginFB.isfetching = false;
+      state.loginFB.currentUser = action.payload;
+      state.loginFB.error = false;
+    },
+    loginFBFailed: (state) => {
+      state.loginFB.isfetching = false;
+      state.loginFB.error = true;
     },
     //register
     registerStart: (state) => {
@@ -49,6 +68,9 @@ export const {
   loginStart,
   loginFailed,
   loginSuccess,
+  loginFBStart,
+  loginFBFailed,
+  loginFBSuccess,
   registerStart,
   registerFailed,
   registerSuccess,

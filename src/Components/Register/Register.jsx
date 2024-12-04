@@ -27,6 +27,21 @@ const Register = () => {
             registerUser(newUser, dispatch ,navigate)
     }
 
+    // const handleSuccess = async (response) => {
+    //     console.log("Facebook Login Success:", response);
+    //     try {
+    //       const res = await fetch("http://localhost:8300/v1/auth/facebook", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ accessToken: response.accessToken }),
+    //       });
+    //       const data = await res.json();
+    //       console.log("Server Response:", data);
+    //     } catch (err) {
+    //       console.error("Error sending token to server:", err);
+    //     }
+    //   };
+
     return ( 
         <section className="register-container">
               <div className="register-title"> Sign up </div>

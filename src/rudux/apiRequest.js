@@ -3,6 +3,9 @@ import {
   loginFailed,
   loginStart,
   loginSuccess,
+  loginFBFailed,
+  loginFBStart,
+  loginFBSuccess,
   registerStart,
   registerSuccess,
   registerFailed,
@@ -17,13 +20,32 @@ import {
 } from "./userSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
+  console.log(user);
   dispatch(loginStart());
   try {
     const res = await axios.post("/v1/auth/login", user);
+    console.log(res.data);
     dispatch(loginSuccess(res.data));
     navigate("/");
   } catch (err) {
     dispatch(loginFailed());
+  }
+};
+export const loginFacebook = async (user, dispatch, navigate) => {
+  console.log(user); // Thông tin từ Facebook
+  dispatch(loginFBStart());
+
+  // Gửi token lên server để xác thực
+
+  try {
+    const res = await axios.post(
+      "http://localhost:8300/v1/auth/facebook",
+      user
+    );
+    dispatch(loginFBSuccess(res.data));
+    navigate("/");
+  } catch (err) {
+    dispatch(loginFBFailed());
   }
 };
 
@@ -53,7 +75,7 @@ export const getAllUsers = async (accessToken, dispatch) => {
 export const deleteUser = async (accessToken, dispatch, id) => {
   dispatch(deleteUsersStart());
   try {
-    const res = await axios.delete("/v1/user" + id, {
+    const res = await axios.delete("/v1/user/" + id, {
       headers: { token: `Bearer ${accessToken}` },
     });
     dispatch(deleteUsersSuccess(res.data));

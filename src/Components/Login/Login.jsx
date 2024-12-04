@@ -2,8 +2,10 @@ import { useState } from "react";
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import "./login.css";
 import { Link ,useNavigate} from "react-router-dom";
-import { loginUser } from "../../rudux/apiRequest";
+import { loginUser,loginFacebook } from "../../rudux/apiRequest";
 import{useDispatch} from "react-redux"
+import axios from "axios";
+
 const Login = () => {
 
     const [username,setUsername]=useState('')
@@ -17,8 +19,17 @@ const Login = () => {
                 username: username,
                 password: password,
             }
+            
             loginUser(newUser, dispatch ,navigate)
     }
+       const handleSuccess = async (response) => {
+            const newUser= {
+                username: response.name,
+                FBid: response.id,
+              }
+
+              loginFacebook(newUser, dispatch ,navigate)
+      }
 
     return ( 
         <section className="login-container">
@@ -34,13 +45,11 @@ const Login = () => {
             appId="610859561366768"
             onSuccess={(response) => {
                 console.log('Login Success!', response);
-            }}
+              }}
             onFail={(error) => {
                 console.log('Login Failed!', error);
             }}
-            onProfileSuccess={(response) => {
-                console.log('Get Profile Success!', response);
-            }}
+            onProfileSuccess={handleSuccess}
             />
             <div className="login-register"> Don't have an account yet? </div>
             

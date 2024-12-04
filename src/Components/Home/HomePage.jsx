@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import "./home.css";
 import { useNavigate } from "react-router-dom"; 
 import {deleteUser, getAllUsers} from "../../rudux/apiRequest"
@@ -7,28 +7,30 @@ import { useEffect } from "react";
 const HomePage = () => {
 
   const user =useSelector((state)=> state.auth.login?.currentUser)
+  const userFB =useSelector((state)=> state.auth.loginFB?.currentUser)
+  const msg =useSelector((state)=> state.users?.msg)
   const listUsers =useSelector((state)=> state.users.users?.allUsers)
 
-  console.log(user.accessToken)
+  console.log(user?.accessToken)
   const dispatch= useDispatch()
   const navigate =useNavigate()
   // DUMMY DATA
-
-
+  const currentUser = user || userFB;
   useEffect(() => {
-    if (!user) {
+     // Ưu tiên sử dụng `user`, nếu không thì dùng `userFB`
+  
+    if (!currentUser) {
       navigate("/login");
-    } else if (user?.accessToken) {
-      getAllUsers(user.accessToken, dispatch);
-      
+    } else if (currentUser?.accessToken) {
+      getAllUsers(currentUser?.accessToken, dispatch);
     }
-  }, [user]);
+  }, [user, userFB]);
 
 
 
   const handleDelete =(id)=>{
       console.log(id)
-      deleteUser(user?.accessToken)
+      deleteUser(currentUser?.accessToken,dispatch,id)
   }
   return (
     <main className="home-container">
@@ -37,15 +39,16 @@ const HomePage = () => {
         {`Your role : ${user?.isAdmin ? `Admin `:`User`}`}
       </div>
       <div className="home-userlist">
-        {listUsers?.map((user) => {
+        {listUsers?.map((user,index) => {
           return (
-            <div className="user-container">
+            <div className="user-container" key={index}>
               <div className="home-user">{user.username}</div>
               <div className="delete-user" onClick= {()=>handleDelete(user._id) }>Delete</div>
             </div>
           );
         })}
       </div>
+      {msg}
     </main>
   );
 };

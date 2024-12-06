@@ -1,57 +1,91 @@
-.home-container{
-    display: flex;
-    background-color: rgb(236, 235, 235);
-    height:600px;
-    width:60%;
-    text-align: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 3rem;
-}
-.home-title{
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-.home-userlist{
+/* Tổng quan */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f8fa;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
     align-items: center;
-}
-.home-user{
-    margin: 1.5rem;
-    background-color: rgb(126, 94, 94);
-    padding:0.5rem;
-    border-radius: 12px;
-}
-.home-role{
-    margin-top: 1rem;
-    font-size: 1.25rem;
+    min-height: 100vh;
 }
 
-.user-container{
-    display: flex;
-    width: 200px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+/* Container chính */
+.home-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
 }
-.delete-user{
-    cursor: pointer;
+
+.home-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.home-role {
     font-size: 1rem;
-    background-color: rgb(240, 34, 96);
-    padding:0.35rem;
-    border-radius: 12px;
-    color:white;
+    color: #555;
+    margin-bottom: 20px;
+    font-style: italic;
 }
-.delete-user:hover{
-    background-color:rgb(207, 18, 75) ;
+
+.home-userlist {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
 }
-.navbar {
-   display: flex;
+
+/* Người dùng */
+.user-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
-.errorMsg{
-    margin-top: 3rem;
-    font-size: 1.5rem;
+
+.user-container:hover {
+    background-color: #f1f5ff;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.home-user {
+    font-size: 1rem;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Nút xóa */
+.delete-user {
+    font-size: 0.9rem;
+    color: #ff4d4f;
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ff4d4f;
+    border-radius: 5px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.delete-user:hover {
+    background-color: #ff4d4f;
+    color: white;
+}
+
+/* Thông báo */
+.msg {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 20px;
+    text-align: center;
 }

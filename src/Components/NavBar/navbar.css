@@ -1,32 +1,68 @@
-.navbar-container{
+/* navbar.css */
+.navbar-container {
     display: flex;
-    padding: 1rem 1.5rem;
-    justify-content: flex-end;
-    background-color: rgb(228, 228, 228);
+    justify-content: space-between;
     align-items: center;
-}
-.navbar-container > *{
-    margin: 0 1.25rem;
+    padding: 10px 20px;
+    background-color: #2c3e50; /* Màu nền navbar */
+    color: #ecf0f1; /* Màu chữ */
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+  }
+  
+  .navbar-container a {
     text-decoration: none;
-    font-weight: 600;
-    color:rgb(0, 99, 230);
-}
-.navbar-home{
-    color:rgb(163, 162, 162);
-}
-.navbar-login {
-    color:rgb(163, 162, 162);
-}
-.navbar-register{
-    color:rgb(255, 255, 255);
-    background-color: rgb(150, 150, 150);
-    padding:0.35rem;
-    border-radius: 6px;
-}
-.navbar-user{
-    color: rgb(0, 154, 165);
-}
-.navbar-logout {
-    color:rgb(156, 156, 156);
-    padding:0.35rem;
-}
+    color: #ecf0f1;
+    margin-right: 15px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-container a:hover {
+    color: #3498db; /* Màu khi hover */
+  }
+  
+  .navbar-home {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .navbar-user {
+    margin-right: 20px;
+    font-size: 16px;
+  }
+  
+  .navbar-user span {
+    color: #1abc9c; /* Màu nổi bật cho tên người dùng */
+    font-weight: bold;
+  }
+  
+  .navbar-logout {
+    cursor: pointer;
+    color: #e74c3c;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-logout:hover {
+    color: #c0392b; /* Màu khi hover */
+  }
+  
+  .navbar-login, .navbar-register {
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: #2980b9;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .navbar-login:hover, .navbar-register:hover {
+    background-color: #1f618d;
+    transform: scale(1.05);
+  }
+  
+  .navbar-container div {
+    display: flex;
+    align-items: center;
+  }
+  

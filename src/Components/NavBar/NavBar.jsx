@@ -1,19 +1,27 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../../rudux/apiRequest";
 const NavBar = () => {
   const user =useSelector((state)=> state.auth.login.currentUser)
   const userFB =useSelector((state)=> state.auth.loginFB?.currentUser)
   const currentUser = user || userFB; 
- console.log(currentUser)
+  const dispatch =useDispatch()
+  const navigate =useNavigate()
+ console.log(userFB)
+
+const handlLogOut =()=>{
+  console.log('currentUser')
+        logOut(dispatch,navigate)
+}
   return (
     <nav className="navbar-container">
       <Link to="/" className="navbar-home"> Home </Link>
-      {user? (
+      {currentUser? (
         <>
         <p className="navbar-user">Hi,  <span> {currentUser?.username}  </span> </p>
-        <Link to="/logout" className="navbar-logout"> Log out</Link>
+        <div className="navbar-logout" onClick= {handlLogOut} > Log out</div>
         </>
       ) : (    
         <>

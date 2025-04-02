@@ -3,10 +3,13 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
 import store from "./rudux/store";
+import GlobalStyles from "./Components/GlobalStyles";
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <GlobalStyles>
+      <App />
+    </GlobalStyles>
   </Provider>,
   document.getElementById("root")
 );

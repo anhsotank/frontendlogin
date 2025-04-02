@@ -3,6 +3,7 @@ import "./home.css";
 import { useNavigate } from "react-router-dom"; 
 import {deleteUser, getAllUsers} from "../../rudux/apiRequest"
 import { useEffect } from "react";
+import NavBar from "../NavBar/NavBar";
 
 const HomePage = () => {
 
@@ -34,6 +35,7 @@ const HomePage = () => {
   }
   return (
     <main className="home-container">
+      <NavBar />
       <div className="home-title">User List</div>
       <div className="home-role">
         {`Your role : ${user?.isAdmin ? `Admin `:`User`}`}

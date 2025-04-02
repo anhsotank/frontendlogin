@@ -1,0 +1,13 @@
+.wrapper {
+    z-index: 1000;
+    width: 100%;
+    max-height: min((100vh - 96px) - 60px, 734px);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgb(0 0 0 / 12%) 0 12px 12px;
+    background-color: var(--color_search);
+    border-radius: 8px;
+    padding-top: 8px;
+    overflow-y: auto;
+}

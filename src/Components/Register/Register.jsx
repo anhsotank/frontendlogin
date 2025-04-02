@@ -27,8 +27,18 @@ const Register = () => {
             setError("Please enter a valid email address.");
             return;
         }
+        const usernameRegex = /^[A-Za-z]+$/;
+        if (!usernameRegex.test(username)) {
+            setError("Username must only contain letters (no numbers or special characters).");
+            return;
+        }
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
+        if (!passwordRegex.test(password)) {
+            setError("Password must be at least 6 characters long, contain an uppercase letter, a lowercase letter, and a special character.");
+            return;
+        }
 
-        if (username.length < 3) {
+        if (username.length < 3 ) {
             setError("Username must be at least 3 characters long.");
             return;
         }
@@ -76,18 +86,7 @@ const Register = () => {
                 {error && <p className="error-message">{error}</p>}
                 <button type="submit">Create account</button>
             </form>
-            <FacebookLogin
-                appId="610859561366768"
-                onSuccess={(response) => {
-                    console.log("Login Success!", response);
-                }}
-                onFail={(error) => {
-                    console.log("Login Failed!", error);
-                }}
-                onProfileSuccess={(response) => {
-                    console.log("Get Profile Success!", response);
-                }}
-            />
+            
         </section>
     );
 };

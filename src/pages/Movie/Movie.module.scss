@@ -63,7 +63,7 @@
         width: 60px;
         font-size: larger;
         opacity: 0.8;
-        color: var(--blue);
+        color: var(--primary);
         &:hover {
             transform: scale(1.1) rotate(-4deg);
             opacity: 1;
@@ -91,4 +91,9 @@
             padding: 20px;
         }
     }
+}
+
+.play-movie{
+    padding: 20px 16px;
+    box-shadow: var(--shadow);
 }

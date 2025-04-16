@@ -2,20 +2,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@100&display=swap');
 
 :root {
-    --body_background: #ffff;
-    --color_search: rgb(255, 255, 255);
-    --primary: #fe2c55;
-    --black: #000000da;
-    --text-color: #333;
+    --body_background: #f0f4f8;
+    --color_search: #ffffff;
+    --primary: #00aeef; /* Xanh dương chính */
+    --black: #1c1c1e;
+    --text-color: #1f2d3d;
     --white: #ffffff;
-    --blue: #2daaed;
+    --blue: #2a8dfb;
+    --hover: #1c6ed2;
+    --card-bg: #ffffff;
+    --border-color: #d0dbe5;
+    --accent: #74c0fc; /* điểm nhấn nhẹ */
+    --shadow: 0 4px 12px rgba(42, 141, 251, 0.15); /* xanh dương nhẹ */
+--shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme='dark'] {
-    --body_background: #121212;
-    --text-color: #fff;
-    --color_search: #2f2f2f;
+    --body_background: #0e141b;
+    --text-color: #e6f0fa;
+    --color_search: #1a1f25;
+    --card-bg: #1e252e;
+    --border-color: #2c333b;
+    --primary: #3b9bfd;
+    --hover: #2978cc;
+    --accent: #4dabf7;
+    --shadow: 0 4px 12px rgba(58, 161, 255, 0.2);
+    --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+
 
 * {
     margin: 0;

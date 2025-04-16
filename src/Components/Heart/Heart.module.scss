@@ -1,0 +1,25 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+
+    background-color: transparent;
+    color: var(--primary);
+}
+
+.icon-heart {
+    padding: 10px;
+        height: 40px;
+        width: 40px;
+        font-size: small;
+        color: #ffffff;
+        opacity: 0.8;
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+}
+
+.blue {
+    color: var(--primary);
+    filter: drop-shadow(0 0 7px var(--primary));
+}

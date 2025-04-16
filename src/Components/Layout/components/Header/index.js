@@ -27,61 +27,59 @@ import DarkMode from "../../../DarkMode";
 
 const cx = classNames.bind(styles);
 
-const menu_item = [
-  {
-    icon: <FontAwesomeIcon icon={faEarthAsia} />,
-    title: "English",
-    children: {
-      title: "Language",
-      data: [
-        {
-          code: "e",
-          title: "English",
-        },
-        {
-          code: "vn",
-          title: "viet nam",
-        },
-      ],
-    },
-  },
-  {
-    icon: <FontAwesomeIcon icon={faCircleQuestion} />,
-    title: "Feedback",
-    to: "/feedback",
-  },
-  {
-    icon: <FontAwesomeIcon icon={faKeyboard} />,
-    title: "keyboar",
-  },
-];
-const useMenu = [
-  {
-    icon: <FontAwesomeIcon icon={faUser} />,
-    title: "View profile",
-    to: "/anh",
-  },
-  {
-    icon: <FontAwesomeIcon icon={faCoins} />,
-    title: "Get coins",
-    to: "/coin",
-  },
-  {
-    icon: <FontAwesomeIcon icon={faGear} />,
-    title: "Setting",
-    to: "/setting",
-  },
-  ...menu_item,
-  {
-    icon: <FontAwesomeIcon icon={faSignOut} />,
-    title: "Log out",
-    to: "/logout",
-  },
-];
-
 function Header() {
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
-
+  const menu_item = [
+    {
+      icon: <FontAwesomeIcon icon={faEarthAsia} />,
+      title: "English",
+      children: {
+        title: "Language",
+        data: [
+          {
+            code: "e",
+            title: "English",
+          },
+          {
+            code: "vn",
+            title: "viet nam",
+          },
+        ],
+      },
+    },
+    {
+      icon: <FontAwesomeIcon icon={faCircleQuestion} />,
+      title: "Feedback",
+      to: "/feedback",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faKeyboard} />,
+      title: "keyboar",
+    },
+  ];
+  const useMenu = [
+    {
+      icon: <FontAwesomeIcon icon={faUser} />,
+      title: ` ${currentUser?.username}`,
+      to: "/anh",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faCoins} />,
+      title: "Get coins",
+      to: "/coin",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faGear} />,
+      title: "Setting",
+      to: "/setting",
+    },
+    ...menu_item,
+    {
+      icon: <FontAwesomeIcon icon={faSignOut} />,
+      title: "Log out",
+      to: "/login",
+    },
+  ];
   //handle logic
   const handlemunuitem = (menuitem) => {
     console.log(menuitem);

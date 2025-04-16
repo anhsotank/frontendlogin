@@ -1,13 +1,13 @@
 import classNames from "classnames/bind";
 import Sidebar from "../DefaultLayout/Sidebar";
 
-import styles from "./HeaderSidebar.module.scss";
+import styles from "./AdminLayout.module.scss";
 import Header from "../components/Header";
 
 const cx = classNames.bind(styles);
 
-function HeaderSidebar({ children }) {
-  let role = "user";
+function AdminLayout({ children }) {
+  let role = "admin";
 
   return (
     <div className={cx("wrapper")}>
@@ -21,4 +21,4 @@ function HeaderSidebar({ children }) {
   );
 }
 
-export default HeaderSidebar;
+export default AdminLayout;

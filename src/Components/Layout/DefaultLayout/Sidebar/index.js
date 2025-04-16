@@ -8,10 +8,12 @@ import {
   faHome,
   faUser,
   faVideoCamera,
+  faFilm,
 } from "@fortawesome/free-solid-svg-icons";
+import FavoriteMovie from "../../../FavoriteMovie/FavoriteMovie";
 // import SuggestedAccounts from '~/components/suggestedAccounts/SuggestedAccounts';
 const cx = classNames.bind(styles);
-function Sidebar() {
+function Sidebar({ role }) {
   const menu_item = [
     {
       icon: <FontAwesomeIcon icon={faHome} />,
@@ -29,14 +31,37 @@ function Sidebar() {
       to: config.routes.live,
     },
   ];
+
+  const adminmenu_item = [
+    {
+      icon: <FontAwesomeIcon icon={faUser} />,
+      title: "manage users",
+      to: config.routes.manageuser,
+    },
+    {
+      icon: <FontAwesomeIcon icon={faFilm} />,
+      title: "manage movies",
+      to: config.routes.managemovie,
+    },
+  ];
+
+  console.log(role);
   return (
     <aside className={cx("wrapper")}>
       <Menu>
-        {menu_item.map((e, index) => (
-          <Menuitem key={index} title={e.title} to={e.to} icon={e.icon} />
-        ))}
+        {role === "user"
+          ? menu_item.map((e, index) => (
+              <Menuitem key={index} title={e.title} to={e.to} icon={e.icon} />
+            ))
+          : adminmenu_item.map((e, index) => (
+              <Menuitem key={index} title={e.title} to={e.to} icon={e.icon} />
+            ))}
       </Menu>
-      {/* <SuggestedAccounts label="Suggested Artist" /> */}
+      {role === "user" ? (
+        <FavoriteMovie label="Favorite movies" />
+      ) : (
+        <title>Hi Admin</title>
+      )}
     </aside>
   );
 }

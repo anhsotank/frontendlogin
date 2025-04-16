@@ -18,6 +18,7 @@ const movieSlice = createSlice({
       isfetching: false,
       error: false,
     },
+
     msg: "",
   },
   reducers: {
@@ -41,6 +42,33 @@ const movieSlice = createSlice({
       state.movies.allMovies = action.payload;
     },
     getMoviesFailed: (state) => {
+      state.movies.isfetching = false;
+      state.movies.error = true;
+    },
+
+    updateMoviesStart: (state) => {
+      state.isfetching = true;
+      state.error = false;
+    },
+    updateMoviesSuccess: (state, action) => {
+      state.movies.isfetching = false;
+      state.msg = action.payload;
+    },
+    updateMoviesFailed: (state, action) => {
+      state.movies.isfetching = false;
+      state.movies.error = true;
+      state.msg = action.payload;
+    },
+
+    addmoviesStart: (state) => {
+      state.movies.isfetching = true;
+    },
+    addmoviesSuccess: (state) => {
+      state.movies.isfetching = false;
+
+      state.movies.error = false;
+    },
+    addmoviesFailed: (state) => {
       state.movies.isfetching = false;
       state.movies.error = true;
     },
@@ -79,6 +107,12 @@ export const {
   getMoviesStart,
   getMoviesSuccess,
   getMoviesFailed,
+  addmoviesFailed,
+  addmoviesStart,
+  addmoviesSuccess,
+  updateMoviesStart,
+  updateMoviesSuccess,
+  updateMoviesFailed,
   deleteMoviesStart,
   deleteMoviesSuccess,
   deleteMoviesFailed,

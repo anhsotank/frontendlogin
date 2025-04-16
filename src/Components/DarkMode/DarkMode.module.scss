@@ -6,11 +6,12 @@
     width: 65px;
     height: 30px;
     position: relative;
+    margin-top: 40px;
     display: block;
     background: #ebebeb;
     border-radius: 200px;
     transform: translateY(-25px);
-    box-shadow: inset 0px 5px 15px var(--blue), inset 0px -5px 15px rgba(3, 225, 241, 0.4);
+    box-shadow: inset 0px 5px 15px var(--primary), inset 0px -5px 15px rgba(3, 225, 241, 0.4);
     cursor: pointer;
     transition: 0.3s;
 }

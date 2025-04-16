@@ -2,8 +2,8 @@
     width: 300px;
     z-index: 100;
     .title-account {
-        color: var(--blue);
-        border-bottom: 0.1px solid var(--blue);
+        color: var(--primary);
+        border-bottom: 0.1px solid var(--primary);
     }
 }
 .search {
@@ -48,7 +48,7 @@ input:not(:placeholder-shown) ~ .search-btn {
     right: 55px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--blue);
+    color: var(--primary);
     background-color: var(--color_search);
     cursor: pointer;
 }
@@ -71,7 +71,7 @@ input:not(:placeholder-shown) ~ .search-btn {
     width: 50px;
     height: 100%;
     font-size: 1.7rem;
-    color: var(--blue);
+    color: var(--primary);
     background-color: var(--color_search);
     &:hover {
         cursor: pointer;

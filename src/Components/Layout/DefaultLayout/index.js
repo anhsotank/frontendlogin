@@ -7,12 +7,13 @@ import Slide from "./Slide";
 
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
+  let role = "user";
   return (
     <div className={cx("wrapper")}>
       <Header />
 
       <div className={cx("container")}>
-        <Sidebar />
+        <Sidebar role={role} />
         <div className={cx("content")}>
           <Slide />
           {children}

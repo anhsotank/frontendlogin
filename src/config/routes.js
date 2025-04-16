@@ -6,5 +6,7 @@ const routes = {
   register: "/register",
   live: "/live",
   movie: "/movie/:id",
+  manageuser: "/manageuser",
+  managemovie: "/managemovie",
 };
 export default routes;

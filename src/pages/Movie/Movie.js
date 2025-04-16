@@ -11,6 +11,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useColor } from "../../hooks";
 import { getoneMovie } from "../../rudux/apiRequest";
+import Comment from "../../Components/Comment/comment";
+import Heart from "../../Components/Heart";
 
 const cx = classNames.bind(styles);
 
@@ -42,11 +44,13 @@ function Movie() {
             backgroundImage: `linear-gradient(to top, transparent, ${color} 650px)`,
           }}
         >
-          <img
-            className={cx("background-header_image")}
-            src="https://i.scdn.co/image/ab67706f000000038c85da51f91d85f7b7294ed5"
-            alt=""
-          />
+          {Movie?.image && (
+            <img
+              className={cx("background-header_image")}
+              src={`http://localhost:8300/uploads/${Movie.image}`}
+              alt="Ảnh phim"
+            />
+          )}
           <div className={cx("title-header")}>
             <span>Movie</span>
             <h1 className={cx("name-Movie")}>{Movie?.moviename}</h1>
@@ -64,12 +68,22 @@ function Movie() {
               className={cx("Movie-icon-play")}
               icon={faCirclePlay}
             />
-            <FontAwesomeIcon
-              className={cx("Movie-icon-heart")}
-              icon={faHeart}
-            />
+
+            <Heart filmid={id} />
           </div>
         </div>
+        <iframe
+          className={cx("play-movie")}
+          width="780"
+          height="500"
+          src={Movie?.srcVideo}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+        <Comment filmid={id} />
       </article>
     </div>
   );

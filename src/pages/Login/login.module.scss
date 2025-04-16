@@ -14,16 +14,16 @@
   background: #fff;
   padding: 35px;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow);
   width: 100%;
   max-width: 420px;
   text-align: center;
 }
 
 .login-title {
-  font-size: 1.9rem;
+  font-size: 3rem;
   font-weight: 700;
-  color: #333;
+  color: #007bff;
   margin-bottom: 25px;
 }
 
@@ -43,10 +43,10 @@
 
 .input-login {
   font-size: 1rem;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 90px;
   transition: all 0.3s ease;
 }
 
@@ -74,10 +74,11 @@
 .button-login {
   cursor: pointer;
   border: none;
+  width: 50%;
   align-self: center;
-  font-size: 1rem;
+  font-size: 2rem;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 90px;
   color: white;
   background-color: #007bff;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -101,6 +102,9 @@
 .login-register-link {
   text-decoration: none;
   color: #007bff;
+  width: 50%;
+ 
+  font-size: 2rem;
   font-weight: 700;
   transition: color 0.3s ease;
 }

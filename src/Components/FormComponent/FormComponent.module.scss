@@ -1,0 +1,45 @@
+.form {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    color: var(--text-color);
+    background: var(--card-bg);
+
+    border-radius: 6px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary) ;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: var(--hover);
+    }
+  }
+  

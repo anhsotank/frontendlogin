@@ -1,155 +1,145 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import "./CommentSection.css";
+import {
+  addComment,
+  getAllComment,
+  deleteComment,
+  updateComment,
+} from "../../rudux/apiRequest";
+import "./comment.scss";
 
-// Action Types
-const ADD_COMMENT = "ADD_COMMENT";
-const FETCH_COMMENTS = "FETCH_COMMENTS";
-
-// Action Creators
-export const addComment = (comment) => ({
-  type: ADD_COMMENT,
-  payload: comment,
-});
-
-export const fetchComments = (filmId) => ({
-  type: FETCH_COMMENTS,
-  payload: filmId,
-});
-
-// Reducer
-const initialState = {
-  comments: [],
-  loading: false,
-  error: null,
-};
-
-export const commentReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case `${FETCH_COMMENTS}_PENDING`:
-      return {
-        ...state,
-        loading: true,
-      };
-    case `${FETCH_COMMENTS}_FULFILLED`:
-      return {
-        ...state,
-        comments: action.payload,
-        loading: false,
-      };
-    case `${FETCH_COMMENTS}_REJECTED`:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-      };
-    case ADD_COMMENT:
-      return {
-        ...state,
-        comments: [...state.comments, action.payload],
-      };
-    default:
-      return state;
-  }
-};
-
-// Component
-const Comment = ({ filmId }) => {
+const Comment = ({ filmid }) => {
   const [newComment, setNewComment] = useState("");
-  const [rating, setRating] = useState(5);
+  const [refreshComments, setRefreshComments] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
   const dispatch = useDispatch();
-  const { comments, loading, error } = useSelector((state) => state.comments);
+  const { allComments, isfetching, error } = useSelector(
+    (state) => state.comments.comments
+  );
+  const a = useSelector((state) => state.comments.comments);
+  console.log(a);
+  const user = useSelector((state) => state.auth.login?.currentUser);
+  const userFB = useSelector((state) => state.auth.loginFB?.currentUser);
+  const currentUser = user || userFB;
+
+  const currentUserId = currentUser?._id;
 
   useEffect(() => {
-    dispatch(fetchComments(filmId));
-  }, [dispatch, filmId]);
+    getAllComment(dispatch, filmid);
+  }, [dispatch, filmid, refreshComments]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() === "") return;
 
     const comment = {
-      id: Date.now(),
-      filmId,
-      content: newComment,
-      rating,
-      username: "User", // Thường sẽ lấy từ authentication state
-      date: new Date().toISOString(),
+      text: newComment,
+
+      movie: filmid,
+      user: currentUserId, // ID người dùng hiện tại
     };
 
-    dispatch(addComment(comment));
+    await addComment(comment, currentUser?.accessToken, filmid, dispatch);
+    setRefreshComments((prev) => !prev);
     setNewComment("");
-    setRating(5);
   };
 
-  const renderStars = (count) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <span
-          key={i}
-          className={`star ${i <= count ? "filled" : "empty"}`}
-          onClick={() => setRating(i)}
-        >
-          ★
-        </span>
-      );
-    }
-    return stars;
+  const handleDelete = async (commentId) => {
+    await deleteComment(currentUser?.accessToken, commentId, dispatch);
+    setRefreshComments((prev) => !prev);
   };
 
-  if (loading)
-    return <div className="comment-section loading">Đang tải bình luận...</div>;
-  if (error) return <div className="comment-section error">Lỗi: {error}</div>;
+  const handleEdit = (comment) => {
+    setEditingCommentId(comment._id);
+    setEditedContent(comment.text);
+  };
+
+  const handleSaveEdit = async (commentId) => {
+    if (editedContent.trim() === "") return;
+    // dispatch(updateComment({ commentId, content: editedContent }));
+    await updateComment(
+      commentId,
+      editedContent,
+      currentUser?.accessToken,
+      dispatch
+    );
+    setEditingCommentId(null);
+    setEditedContent("");
+    setRefreshComments((prev) => !prev);
+  };
 
   return (
     <div className="comment-section">
       <h3 className="comment-section__title">Bình luận phim</h3>
-
       <form className="comment-form" onSubmit={handleSubmit}>
-        <div className="rating-selector">
-          <label>Đánh giá của bạn:</label>
-          <div className="stars-container">{renderStars(rating)}</div>
-        </div>
         <textarea
           className="comment-input"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Nhập bình luận của bạn về bộ phim..."
+          placeholder="Nhập bình luận..."
           rows={4}
         />
         <button className="submit-button" type="submit">
           Gửi bình luận
         </button>
       </form>
-
       <div className="comments-list">
-        {comments.length === 0 ? (
-          <p className="no-comments">
-            Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
-          </p>
+        {isfetching ? (
+          <p>Đang tải bình luận...</p>
+        ) : error ? (
+          <p className="error">Lỗi: {error}</p>
+        ) : allComments?.comments?.length === 0 ? (
+          <p>Chưa có bình luận nào.</p>
         ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="comment-item">
+          allComments?.comments?.map((comment) => (
+            <div key={comment._id} className="comment-item">
               <div className="comment-header">
-                <span className="username">{comment.username}</span>
+                <span className="username">{comment?.user?.username}</span>
                 <span className="comment-date">
-                  {new Date(comment.date).toLocaleDateString()}
+                  {new Date(comment?.createdAt).toLocaleDateString()}
                 </span>
-                <div className="comment-rating">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`star ${
-                        i < comment.rating ? "filled" : "empty"
-                      }`}
+                {comment.user._id === currentUserId && (
+                  <>
+                    <button
+                      className="edit-button"
+                      onClick={() => handleEdit(comment)}
                     >
-                      ★
-                    </span>
-                  ))}
-                </div>
+                      ✏️ Sửa
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(comment._id)}
+                    >
+                      ❌ Xóa
+                    </button>
+                  </>
+                )}
               </div>
-              <p className="comment-content">{comment.content}</p>
+              {editingCommentId === comment._id ? (
+                <div className="edit-section">
+                  <textarea
+                    className="edit-input"
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    rows={3}
+                  />
+                  <button
+                    className="save-button"
+                    onClick={() => handleSaveEdit(comment._id)}
+                  >
+                    💾 Lưu
+                  </button>
+                  <button
+                    className="cancel-button"
+                    onClick={() => setEditingCommentId(null)}
+                  >
+                    ❌ Hủy
+                  </button>
+                </div>
+              ) : (
+                <p className="comment-content">{comment.text}</p>
+              )}
             </div>
           ))
         )}

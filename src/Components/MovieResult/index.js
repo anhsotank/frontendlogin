@@ -9,17 +9,20 @@ function MovieResult({ data }) {
   return (
     <Link to={`/movie/${data._id}`} className={cx("wrapper")}>
       {/* onClick={() => dispatch(actions.setsong(data))} */}
-      <img
-        className={cx("avata")}
-        src="https://i.scdn.co/image/ab67706f000000038c85da51f91d85f7b7294ed5"
-      />
+      {data?.image && (
+        <img
+          className={cx("avata")}
+          src={`http://localhost:8300/uploads/${data.image}`}
+          alt="Ảnh phim"
+        />
+      )}
 
       <div className={cx("info")}>
         <h4 className={cx("name")}>
           <span>{data.moviename}</span>
-          {data.tick && (
+          {/* {data.tick && (
             <FontAwesomeIcon className={cx("check")} icon={faCheckCircle} />
-          )}
+          )} */}
         </h4>
       </div>
     </Link>

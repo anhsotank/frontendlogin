@@ -1,4 +1,8 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import config from "../config";
+
 import {
   loginFailed,
   loginStart,
@@ -29,6 +33,12 @@ import {
   getMoviesStart,
   getMoviesSuccess,
   getMoviesFailed,
+  addmoviesFailed,
+  addmoviesStart,
+  addmoviesSuccess,
+  updateMoviesStart,
+  updateMoviesSuccess,
+  updateMoviesFailed,
   deleteMoviesSuccess,
   deleteMoviesStart,
   deleteMoviesFailed,
@@ -37,6 +47,33 @@ import {
   getSearchMoviesFailed,
 } from "./movieSlice";
 
+import {
+  getcommentsStart,
+  getcommentsSuccess,
+  getcommentsFailed,
+  addcommentsStart,
+  addcommentsSuccess,
+  addcommentsFailed,
+  deletecommentsStart,
+  deletecommentsSuccess,
+  deletecommentsFailed,
+  updatecommentsStart,
+  updatecommentsSuccess,
+  updatecommentsFailed,
+} from "./commentSlide";
+
+import {
+  addfavoritesStart,
+  addfavoritesSuccess,
+  addfavoritesFailed,
+  getfavoritesFailed,
+  getfavoritesStart,
+  getfavoritesSuccess,
+  deletefavoritesStart,
+  deletefavoritesSuccess,
+  deletefavoritesFailed,
+} from "./favoriteSlide";
+
 export const loginUser = async (user, dispatch, navigate) => {
   console.log(user);
   dispatch(loginStart());
@@ -44,9 +81,15 @@ export const loginUser = async (user, dispatch, navigate) => {
     const res = await axios.post("/v1/auth/login", user);
     console.log(res.data);
     dispatch(loginSuccess(res.data));
-    navigate("/");
+    if (res.data?.isAdmin) {
+      navigate(config.routes.manageuser); // hoặc config.routes.manageuser nếu bạn dùng config
+    } else {
+      navigate(config.routes.home);
+    }
+    toast.success(" Login Success!");
   } catch (err) {
     dispatch(loginFailed(err.response.data));
+    toast.error(err.response.data);
   }
 };
 export const loginFacebook = async (user, dispatch, navigate) => {
@@ -73,8 +116,10 @@ export const registerUser = async (user, dispatch, navigate) => {
     await axios.post("/v1/auth/register", user);
     dispatch(registerSuccess());
     navigate("/login");
+    toast.success(" Register Success!");
   } catch (err) {
     dispatch(registerFailed());
+    toast.error("Register Failed!");
   }
 };
 
@@ -97,6 +142,7 @@ export const deleteUser = async (accessToken, dispatch, id) => {
       headers: { token: `Bearer ${accessToken}` },
     });
     dispatch(deleteUsersSuccess(res.data));
+    await getAllUsers(accessToken, dispatch);
   } catch (err) {
     dispatch(deleteUsersFailed(err.response.data));
   }
@@ -125,15 +171,47 @@ export const getAllMovie = async (dispatch) => {
   }
 };
 
-export const deleteMovie = async (accessToken, dispatch, id) => {
+export const addMovie = async (movie, accessToken, dispatch) => {
+  dispatch(addmoviesStart());
+  try {
+    const res = await axios.post("/v1/movie/createmovie", movie, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    dispatch(addmoviesSuccess(res.data));
+    getAllMovie(dispatch);
+  } catch (err) {
+    dispatch(addmoviesFailed());
+  }
+};
+
+export const deleteMovie = async (id, accessToken, dispatch) => {
   dispatch(deleteMoviesStart());
   try {
-    const res = await axios.delete("/v1/movie/" + id, {
+    const res = await axios.delete("/v1/movie/deletemovie/" + id, {
       headers: { token: `Bearer ${accessToken}` },
     });
     dispatch(deleteMoviesSuccess(res.data));
+    getAllMovie(dispatch);
   } catch (err) {
     dispatch(deleteMoviesFailed(err.response.data));
+  }
+};
+export const updateMovie = async (id, data, accessToken, dispatch) => {
+  dispatch(updateMoviesStart());
+  try {
+    const res = await axios.put("/v1/movie/updatemovie/" + id, data, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    dispatch(updateMoviesSuccess(res.data));
+    getAllMovie(dispatch);
+  } catch (err) {
+    dispatch(updateMoviesFailed(err.response.data));
   }
 };
 
@@ -155,5 +233,110 @@ export const getoneMovie = async (dispatch, id) => {
     dispatch(getoneMoviesSuccess(res.data));
   } catch (err) {
     dispatch(getoneMoviesFailed());
+  }
+};
+//Comment
+
+export const getAllComment = async (dispatch, id) => {
+  dispatch(getcommentsStart());
+  try {
+    const res = await axios.get("/v1/movie/" + id + "/comments");
+    dispatch(getcommentsSuccess(res.data));
+  } catch (err) {
+    dispatch(getcommentsFailed());
+  }
+};
+
+export const addComment = async (comment, accessToken, id, dispatch) => {
+  dispatch(addcommentsStart());
+  try {
+    const res = await axios.post(
+      "/v1/movie/" + id + "/createcomments",
+      comment,
+      {
+        headers: { token: `Bearer ${accessToken}` },
+      }
+    );
+    dispatch(addcommentsSuccess(res.data));
+  } catch (err) {
+    dispatch(addcommentsFailed());
+  }
+};
+
+export const deleteComment = async (accessToken, id, dispatch) => {
+  dispatch(deletecommentsStart());
+  try {
+    const res = await axios.delete("/v1/movie/comments/" + id, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(deletecommentsSuccess(res.data));
+  } catch (err) {
+    dispatch(deletecommentsFailed(err.response.data));
+  }
+};
+
+export const updateComment = async (
+  commentId,
+  editedContent,
+  accessToken,
+  dispatch
+) => {
+  dispatch(updatecommentsStart());
+  console.log(editedContent);
+  try {
+    const res = await axios.put(
+      `/v1/movie/${commentId}/updatecomments`,
+      { text: editedContent },
+      {
+        headers: { token: `Bearer ${accessToken}` },
+      }
+    );
+    dispatch(updatecommentsSuccess(res.data));
+  } catch (err) {
+    dispatch(updatecommentsFailed(err.response.data));
+  }
+};
+
+// Favorite Movie
+
+export const getAllfavorite = async (dispatch, accessToken) => {
+  dispatch(getfavoritesStart());
+  try {
+    const res = await axios.get("/v1/user/favorite", {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(getfavoritesSuccess(res.data));
+  } catch (err) {
+    dispatch(getfavoritesFailed());
+  }
+};
+
+export const addfavorite = async (id, accessToken, dispatch) => {
+  dispatch(addfavoritesStart());
+  try {
+    const res = await axios.post(
+      "/v1/user/addfavorite/" + id,
+      {}, // body rỗng vì không cần gửi gì
+      {
+        headers: { token: `Bearer ${accessToken}` },
+      }
+    );
+    dispatch(addfavoritesSuccess(res.data));
+    await getAllfavorite(dispatch, accessToken);
+  } catch (err) {
+    dispatch(addfavoritesFailed(err.response?.data || err.message));
+  }
+};
+
+export const deletefavorite = async (id, accessToken, dispatch) => {
+  dispatch(deletefavoritesStart());
+  try {
+    const res = await axios.delete("/v1/user/deletefavorite/" + id, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(deletefavoritesSuccess(res.data));
+    await getAllfavorite(dispatch, accessToken);
+  } catch (err) {
+    dispatch(deletefavoritesFailed(err.response.data));
   }
 };

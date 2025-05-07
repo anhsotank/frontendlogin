@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./ManageMovie.module.scss";
+import styles from "./ManageActor.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -12,33 +12,28 @@ import "tippy.js/dist/tippy.css";
 import ReactPaginate from "react-paginate";
 
 import {
-  getAllMovie,
-  deleteMovie,
-  addMovie,
-  updateMovie,
-  getAllGenres,
   getAllactors,
+  addActor,
+  deleteActor,
+  updateActor,
 } from "../../../rudux/apiRequest";
 import FormComponent from "../../../Components/FormComponent";
 
 const cx = classNames.bind(styles);
 
-function MovieList() {
-  const [movies, setmovies] = useState([]);
-  const [filteredmovie, setFilteredmovies] = useState([]);
+function ActorList() {
+  const [filteredactor, setFilteredactors] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   // const [showForm, setShowForm] = useState(false);
   const [visible, setVisible] = useState(false);
   const [editData, setEditData] = useState(null); // null = đang thêm mới
 
-  const moviesPerPage = 7;
+  const actorsPerPage = 7;
 
   const user = useSelector((state) => state.auth.login?.currentUser);
   const userFB = useSelector((state) => state.auth.loginFB?.currentUser);
-  const msg = useSelector((state) => state.movies?.msg);
-  const listmovies = useSelector((state) => state.movies.movies?.allMovies);
-  const listgenres = useSelector((state) => state.genres.genres?.allgenres);
+  const msg = useSelector((state) => state.actors?.msg);
   const listactors = useSelector((state) => state.actors.actors?.allactors);
 
   console.log(user?.accessToken);
@@ -46,7 +41,7 @@ function MovieList() {
   const navigate = useNavigate();
   const currentUser = user || userFB;
   console.log(currentUser);
-  console.log(listmovies);
+  console.log(listactors);
   useEffect(() => {
     if (!currentUser) {
       navigate("/login");
@@ -54,72 +49,65 @@ function MovieList() {
       toast.error("Bạn không có quyền truy cập trang này!");
       navigate("/"); // hoặc route khác tùy bạn
     } else {
-      getAllMovie(dispatch);
-      getAllGenres(dispatch);
       getAllactors(dispatch);
     }
   }, [currentUser]);
 
   useEffect(() => {
-    // Mỗi khi listmovies thay đổi, cập nhật danh sách được lọc
-    setFilteredmovies(listmovies || []);
-  }, [listmovies]);
+    // Mỗi khi listactors thay đổi, cập nhật danh sách được lọc
+    setFilteredactors(listactors || []);
+  }, [listactors]);
 
-  const handledeleteMovie = async (movie) => {
+  const handledeleteactor = async (actor) => {
     try {
-      await deleteMovie(movie._id, currentUser?.accessToken, dispatch);
+      await deleteActor(actor._id, currentUser?.accessToken, dispatch);
       toast.success("xóa phim thành công!");
     } catch (err) {
       toast.error("Xóa thất bại!");
     }
   };
 
-  const handleupdateMovie = (movie) => {
-    console.log("Text", movie);
-    setEditData(movie); // Gán phim đang sửa
+  const handleupdateactor = (actor) => {
+    console.log("Text", actor);
+    setEditData(actor); // Gán phim đang sửa
     setVisible(true); // Mở form
   };
 
   const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
+    const value = e?.target?.value?.toLowerCase();
     setSearchTerm(value);
     setCurrentPage(0);
-    const filtered = listmovies.filter((movie) =>
-      movie?.moviename.toLowerCase().includes(value)
+    const filtered = listactors?.filter((actor) =>
+      actor?.name?.toLowerCase()?.includes(value)
     );
-    setFilteredmovies(filtered);
+    setFilteredactors(filtered);
   };
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
 
-  const offset = currentPage * moviesPerPage;
-  const currentPagemovie = filteredmovie.slice(offset, offset + moviesPerPage);
-  console.log(currentPagemovie);
-  const pageCount = Math.ceil(filteredmovie.length / moviesPerPage);
+  const offset = currentPage * actorsPerPage;
+  const currentPageactor = filteredactor.slice(offset, offset + actorsPerPage);
+  console.log(currentPageactor);
+  const pageCount = Math.ceil(filteredactor.length / actorsPerPage);
 
   const handleFormSubmit = async (formData) => {
     const data = new FormData();
     console.log("formData", formData);
-    data.append("moviename", formData.moviename);
-    data.append("description", formData.description);
-    data.append("releaseYear", formData.releaseYear);
-    data.append("srcVideo", formData.srcVideo);
-    data.append("genre", formData.genre);
-    formData.actors?.forEach((id) => {
-      data.append("actors", id);
-    });
+    data.append("name", formData.name);
+    data.append("bio", formData.bio);
+
     if (formData.image instanceof File) {
       data.append("image", formData.image);
     }
     console.log("formData", data);
 
     if (editData) {
-      await updateMovie(editData._id, data, currentUser?.accessToken, dispatch);
+      await updateActor(editData._id, data, currentUser?.accessToken, dispatch);
       toast.success("Cập nhật phim thành công!");
     } else {
-      await addMovie(data, currentUser?.accessToken, dispatch);
+      await addActor(data, currentUser?.accessToken, dispatch);
       toast.success("Thêm phim thành công!");
     }
 
@@ -130,50 +118,18 @@ function MovieList() {
   const renderForm = (attrs) => (
     <div className={cx("form-wrapper")} tabIndex="-1" {...attrs}>
       <FormComponent
-        fields={movieFields}
+        fields={actorFields}
         initialData={editData || {}} // Dữ liệu đang sửa hoặc rỗng khi thêm
         onSubmit={handleFormSubmit}
       />
     </div>
   );
 
-  const movieFields = [
+  const actorFields = [
     {
-      name: "moviename",
-      label: "Tên phim",
-      placeholder: "Nhập tên phim...",
-      required: true,
-    },
-    {
-      name: "description",
-      label: "Mô tả",
-      placeholder: "Mô tả phim...",
-    },
-    {
-      name: "releaseYear",
-      label: "Năm",
-      placeholder: "2024",
-    },
-    {
-      name: "srcVideo",
-      label: "Đường dẫn video",
-      placeholder: "https://www.youtube.com/...",
-    },
-    {
-      name: "genre",
-      label: "Thể loại",
-      type: "select",
-      options: listgenres?.map((g) => ({ label: g.name, value: g._id })),
-      required: true,
-    },
-    {
-      name: "actors",
-      label: "Diễn viên",
-      type: "multi-select",
-      options: listactors?.map((actor) => ({
-        label: actor.name,
-        value: actor._id,
-      })),
+      name: "name",
+      label: "Tên thể loại",
+      placeholder: "Nhập tên thể loại...",
       required: true,
     },
     {
@@ -181,23 +137,16 @@ function MovieList() {
       label: "Ảnh phim",
       type: "file",
     },
-  ];
-
-  const movieTitleFields = [
     {
-      name: "image",
+      name: "bio",
+      label: "bio",
+      placeholder: "Nhập bio của diễn viên...",
     },
-    {
-      name: "moviename",
-    },
-    { name: "description" },
-    { name: "genre" },
-    { name: "releaseYear" },
   ];
 
   return (
     <div className={cx("wrapper")}>
-      <h2 className={cx("title")}>Quản lý Phim</h2>
+      <h2 className={cx("title")}>Quản Lý Diễn viên</h2>
 
       <HeadlessTippy
         interactive
@@ -216,13 +165,13 @@ function MovieList() {
             setVisible(!visible);
           }}
         >
-          {visible ? "Đóng form" : "Thêm phim"}
+          {visible ? "Đóng form" : "Thêm diễn viên"}
         </button>
       </HeadlessTippy>
 
       {/* 
       {showForm && (
-        <FormComponent fields={movieFields} onSubmit={handleFormSubmit} />
+        <FormComponent fields={actorFields} onSubmit={handleFormSubmit} />
       )} */}
       <input
         className={cx("search")}
@@ -231,48 +180,34 @@ function MovieList() {
         value={searchTerm}
         onChange={handleSearch}
       />
-      <div className={cx("header-movie-list")}>
-        {movieTitleFields?.map((movie) => (
-          <span>{movie.name}</span>
-        ))}
-        <span></span>
-      </div>
-      <ul className={cx("movie-list")}>
-        {currentPagemovie?.map((movie) => (
-          <li key={movie._id} className={cx("movie-item")}>
-            {movie?.image && (
+
+      <ul className={cx("actor-list")}>
+        {currentPageactor?.map((actor) => (
+          <li key={actor._id} className={cx("actor-item")}>
+            {actor?.image && (
               <img
-                src={`http://localhost:8300/uploads/${movie.image}`}
-                alt="Ảnh phim"
+                src={`http://localhost:8300/uploads/${actor.image}`}
+                alt="Ảnh diễn viên"
               />
             )}
-
-            <Tippy content={movie.moviename}>
-              <span className={cx("moviename")}>
-                {movie.moviename.length > 15
-                  ? movie.moviename.slice(0, 15) + "..."
-                  : movie.moviename}
+            <span>{actor?.name}</span>
+            <Tippy content={actor.bio}>
+              <span className={cx("bio")}>
+                {actor.bio?.length > 25
+                  ? actor.bio.slice(0, 25) + "..."
+                  : actor.bio}
               </span>
             </Tippy>
-            <Tippy content={movie.description}>
-              <span className={cx("description")}>
-                {movie.description.length > 25
-                  ? movie.description.slice(0, 25) + "..."
-                  : movie.description}
-              </span>
-            </Tippy>
-            <span>{movie?.genre?.name}</span>
-            <span>{movie.releaseYear}</span>
             <div className={cx("action-btn")}>
               <button
                 className={cx("delete-btn")}
-                onClick={() => handledeleteMovie(movie)}
+                onClick={() => handledeleteactor(actor)}
               >
                 Xóa
               </button>
               <button
                 className={cx("update-btn")}
-                onClick={() => handleupdateMovie(movie)}
+                onClick={() => handleupdateactor(actor)}
               >
                 sửa
               </button>
@@ -297,4 +232,4 @@ function MovieList() {
   );
 }
 
-export default MovieList;
+export default ActorList;

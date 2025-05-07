@@ -1,16 +1,17 @@
 import classNames from "classnames/bind";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlay, faEye } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 import styles from "./Movie.module.scss";
 
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useColor } from "../../hooks";
-import { getoneMovie } from "../../rudux/apiRequest";
+import { getoneMovie, increaseView } from "../../rudux/apiRequest";
 import Comment from "../../Components/Comment/comment";
 import Heart from "../../Components/Heart";
 
@@ -25,6 +26,7 @@ function Movie() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    increaseView(dispatch, id);
     getoneMovie(dispatch, id);
   }, [id, dispatch]);
 
@@ -55,9 +57,19 @@ function Movie() {
             <span>Movie</span>
             <h1 className={cx("name-Movie")}>{Movie?.moviename}</h1>
 
-            <span>
-              {Movie?.description} | {Movie?.releaseYear}
-            </span>
+            <Tippy content={Movie?.description}>
+              <span className={cx("description")}>
+                {Movie?.description.length > 120
+                  ? Movie?.description.slice(0, 120) + "..."
+                  : Movie?.description}{" "}
+                | {Movie?.releaseYear}
+              </span>
+            </Tippy>
+            {Movie?.genre ? <span>genre : {Movie?.genre?.name}</span> : ""}
+            <div className={cx("view-Movie")}>
+              <FontAwesomeIcon icon={faEye} />
+              {Movie?.views}
+            </div>
           </div>
         </header>
       )}
@@ -83,6 +95,7 @@ function Movie() {
           referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
+
         <Comment filmid={id} />
       </article>
     </div>

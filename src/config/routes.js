@@ -6,7 +6,11 @@ const routes = {
   register: "/register",
   live: "/live",
   movie: "/movie/:id",
+  genre: "/genre/:id",
   manageuser: "/manageuser",
   managemovie: "/managemovie",
+  managegenre: "/managegenre",
+  manageactor: "/manageactor",
+  dashboard: "/dashboard",
 };
 export default routes;

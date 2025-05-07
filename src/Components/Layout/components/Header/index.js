@@ -1,7 +1,9 @@
 import classNames from "classnames/bind";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCaretDown,
   faCircleQuestion,
   faCloudArrowUp,
   faCoins,
@@ -12,7 +14,6 @@ import {
   faSignOut,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import config from "../../../../config";
@@ -22,13 +23,22 @@ import Button from "../../../Button";
 import Menu from "../../../Popper/Menu";
 import Search from "../Search";
 import { Link } from "react-router-dom";
-
+import { getAllGenres } from "../../../../rudux/apiRequest";
 import DarkMode from "../../../DarkMode";
 
 const cx = classNames.bind(styles);
 
 function Header() {
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const listgenres = useSelector((state) => state.genres.genres?.allgenres);
+  console.log(listgenres);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchGenres = async () => {
+      await getAllGenres(dispatch);
+    };
+    fetchGenres();
+  }, [dispatch]);
   const menu_item = [
     {
       icon: <FontAwesomeIcon icon={faEarthAsia} />,
@@ -80,6 +90,15 @@ function Header() {
       to: "/login",
     },
   ];
+
+  //list genre
+  const genreMenuItems =
+    listgenres?.map((genre) => ({
+      title: genre.name,
+      to: `/genre/${genre._id}`,
+    })) || [];
+  console.log(genreMenuItems);
+
   //handle logic
   const handlemunuitem = (menuitem) => {
     console.log(menuitem);
@@ -96,11 +115,17 @@ function Header() {
         <Search />
 
         <div className={cx("action")}>
-          <Tippy content="upload" placement="bottom">
-            <button className={cx("btn-update")}>
+          {/* <Tippy content="upload" placement="bottom">
+            <button className={cx("btn-upload")}>
               <FontAwesomeIcon icon={faCloudArrowUp} />
             </button>
-          </Tippy>
+          </Tippy> */}
+          <Menu item={genreMenuItems} onChange={handlemunuitem}>
+            <button className={cx("btn-genre")}>
+              genre
+              <FontAwesomeIcon icon={faCaretDown} />
+            </button>
+          </Menu>
           <DarkMode></DarkMode>
 
           {currentUser ? (

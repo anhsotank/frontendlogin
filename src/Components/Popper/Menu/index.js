@@ -6,7 +6,7 @@ import { Wrapper as PopperWrapper } from "../../Popper";
 import styles from "./Menu.module.scss";
 import Menuitem from "./Menuitem";
 import Header from "./Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +14,11 @@ const defaultFc = () => {};
 function Menu({ children, item = [], onChange = defaultFc }) {
   const [history, sethistory] = useState([{ data: item }]);
   const curent = history[history.length - 1];
+
+  // 🔥 Cập nhật history khi item props thay đổi
+  useEffect(() => {
+    sethistory([{ data: item }]);
+  }, [item]);
 
   return (
     <Tippy

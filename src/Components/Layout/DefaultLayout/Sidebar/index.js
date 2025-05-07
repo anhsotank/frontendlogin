@@ -9,6 +9,9 @@ import {
   faUser,
   faVideoCamera,
   faFilm,
+  faGenderless,
+  faUsersLine,
+  faChartSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import FavoriteMovie from "../../../FavoriteMovie/FavoriteMovie";
 // import SuggestedAccounts from '~/components/suggestedAccounts/SuggestedAccounts';
@@ -34,6 +37,11 @@ function Sidebar({ role }) {
 
   const adminmenu_item = [
     {
+      icon: <FontAwesomeIcon icon={faChartSimple} />,
+      title: "Dashboard",
+      to: config.routes.dashboard,
+    },
+    {
       icon: <FontAwesomeIcon icon={faUser} />,
       title: "manage users",
       to: config.routes.manageuser,
@@ -42,6 +50,16 @@ function Sidebar({ role }) {
       icon: <FontAwesomeIcon icon={faFilm} />,
       title: "manage movies",
       to: config.routes.managemovie,
+    },
+    {
+      icon: <FontAwesomeIcon icon={faGenderless} />,
+      title: "manage genre",
+      to: config.routes.managegenre,
+    },
+    {
+      icon: <FontAwesomeIcon icon={faUsersLine} />,
+      title: "manage actor",
+      to: config.routes.manageactor,
     },
   ];
 

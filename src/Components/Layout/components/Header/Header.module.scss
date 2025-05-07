@@ -47,6 +47,13 @@
     margin-left: 10px;
     font-size: 2rem;
 }
+.btn-genre {
+    background-color: transparent;
+    color: var(--primary);
+    padding: 7px;
+    margin-left: 10px;
+    font-size: 1.5rem;
+}
 
 .user-avata {
     height: 32px;
@@ -59,5 +66,5 @@
 // menu
 .menu-item {
     width: 220px;
-    color: var(--text-color);
+    
 }

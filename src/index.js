@@ -4,7 +4,7 @@ import App from "./App";
 import { Provider } from "react-redux";
 import store from "./rudux/store";
 import GlobalStyles from "./Components/GlobalStyles";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.render(

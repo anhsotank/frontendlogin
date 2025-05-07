@@ -74,6 +74,39 @@ import {
   deletefavoritesFailed,
 } from "./favoriteSlide";
 
+import {
+  getMoviesbyGenreFailed,
+  getMoviesbyGenreStart,
+  getMoviesbyGenreSuccess,
+  getgenresStart,
+  getgenresSuccess,
+  getgenresFailed,
+  addgenresFailed,
+  addgenresStart,
+  addgenresSuccess,
+  updategenresStart,
+  updategenresSuccess,
+  updategenresFailed,
+  deletegenresSuccess,
+  deletegenresStart,
+  deletegenresFailed,
+} from "./genreSlice";
+
+import {
+  addActorsStart,
+  addActorsSuccess,
+  addActorsFailed,
+  getActorsStart,
+  getActorsSuccess,
+  getActorsFailed,
+  deleteActorsStart,
+  deleteActorsFailed,
+  deleteActorsSuccess,
+  updateActorsStart,
+  updateActorsSuccess,
+  updateActorsFailed,
+} from "./actorSlice";
+
 export const loginUser = async (user, dispatch, navigate) => {
   console.log(user);
   dispatch(loginStart());
@@ -82,7 +115,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     console.log(res.data);
     dispatch(loginSuccess(res.data));
     if (res.data?.isAdmin) {
-      navigate(config.routes.manageuser); // hoặc config.routes.manageuser nếu bạn dùng config
+      navigate(config.routes.dashboard); // hoặc config.routes.manageuser nếu bạn dùng config
     } else {
       navigate(config.routes.home);
     }
@@ -170,7 +203,6 @@ export const getAllMovie = async (dispatch) => {
     dispatch(getMoviesFailed());
   }
 };
-
 export const addMovie = async (movie, accessToken, dispatch) => {
   dispatch(addmoviesStart());
   try {
@@ -186,7 +218,6 @@ export const addMovie = async (movie, accessToken, dispatch) => {
     dispatch(addmoviesFailed());
   }
 };
-
 export const deleteMovie = async (id, accessToken, dispatch) => {
   dispatch(deleteMoviesStart());
   try {
@@ -233,6 +264,25 @@ export const getoneMovie = async (dispatch, id) => {
     dispatch(getoneMoviesSuccess(res.data));
   } catch (err) {
     dispatch(getoneMoviesFailed());
+  }
+};
+
+export const increaseView = async (dispatch, id) => {
+  try {
+    await axios.put(`/v1/movie/${id}/view`);
+    getoneMovie(dispatch, id);
+  } catch (error) {
+    console.error("Tăng lượt xem thất bại:", error);
+  }
+};
+
+export const getTopMovies = async () => {
+  try {
+    const res = await axios.get("v1/movie/top/viewed");
+    return res.data;
+  } catch (err) {
+    console.error("Lỗi khi lấy top phim:", err);
+    return [];
   }
 };
 //Comment
@@ -338,5 +388,121 @@ export const deletefavorite = async (id, accessToken, dispatch) => {
     await getAllfavorite(dispatch, accessToken);
   } catch (err) {
     dispatch(deletefavoritesFailed(err.response.data));
+  }
+};
+
+//genre movie
+
+export const getAllGenres = async (dispatch) => {
+  dispatch(getgenresStart());
+  try {
+    const res = await axios.get("/v1/genre");
+    dispatch(getgenresSuccess(res.data));
+  } catch (err) {
+    dispatch(getgenresFailed());
+  }
+};
+
+export const getAllMoviebyGenre = async (genreId, dispatch) => {
+  dispatch(getMoviesbyGenreStart());
+  try {
+    const res = await axios.get("/v1/genre/" + genreId);
+    dispatch(getMoviesbyGenreSuccess(res.data));
+  } catch (err) {
+    dispatch(getMoviesbyGenreFailed());
+  }
+};
+
+export const addGenre = async (genrename, accessToken, dispatch) => {
+  dispatch(addgenresStart());
+  try {
+    const res = await axios.post("/v1/genre/creategenre", genrename, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(addgenresSuccess(res.data));
+    getAllGenres(dispatch);
+  } catch (err) {
+    dispatch(addgenresFailed());
+  }
+};
+
+export const deleteGenre = async (id, accessToken, dispatch) => {
+  dispatch(deletegenresStart());
+  try {
+    const res = await axios.delete("/v1/genre/deletegenre/" + id, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(deletegenresSuccess(res.data));
+    getAllGenres(dispatch);
+  } catch (err) {
+    dispatch(deletegenresFailed(err.response.data));
+  }
+};
+export const updateGenre = async (id, genrename, accessToken, dispatch) => {
+  dispatch(updategenresStart());
+  try {
+    const res = await axios.put("/v1/genre/updategenre/" + id, genrename, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(updategenresSuccess(res.data));
+    getAllGenres(dispatch);
+  } catch (err) {
+    dispatch(updategenresFailed(err.response.data));
+  }
+};
+
+//actor movie
+
+export const getAllactors = async (dispatch) => {
+  dispatch(getActorsStart());
+  try {
+    const res = await axios.get("/v1/actor");
+    dispatch(getActorsSuccess(res.data));
+  } catch (err) {
+    dispatch(getActorsFailed());
+  }
+};
+
+export const addActor = async (data, accessToken, dispatch) => {
+  dispatch(addActorsStart());
+  try {
+    const res = await axios.post("/v1/actor/createactor", data, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(addActorsSuccess(res.data));
+    getAllactors(dispatch);
+  } catch (err) {
+    dispatch(addActorsFailed());
+    toast.success("Thêm phim thất bại!");
+  }
+};
+
+export const deleteActor = async (id, accessToken, dispatch) => {
+  dispatch(deleteActorsStart());
+  try {
+    const res = await axios.delete("/v1/actor/deleteactor/" + id, {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(deleteActorsSuccess(res.data));
+    getAllactors(dispatch);
+  } catch (err) {
+    dispatch(deleteActorsFailed(err.response.data));
+  }
+};
+export const updateActor = async (id, actor, accessToken, dispatch) => {
+  dispatch(updateActorsStart());
+  try {
+    const res = await axios.put("/v1/actor/updateactor/" + id, actor, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(updateActorsSuccess(res.data));
+    getAllactors(dispatch);
+  } catch (err) {
+    dispatch(updateActorsFailed(err.response.data));
+    toast.success("cập nhật phim thất bại !");
   }
 };

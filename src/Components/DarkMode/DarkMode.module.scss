@@ -63,3 +63,30 @@
 .dark_mode_input:checked + .dark_mode_label svg.moon {
     fill: #fff;
 }
+
+.color_picker_wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 0.5rem;
+    font-size: 14px;
+    color: var(--text-color);
+  }
+  
+  .color_picker {
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    background-color: transparent;
+    box-shadow: 0 0 5px var(--primary);
+    transition: all 0.3s ease;
+  }
+  
+  .color_picker:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--primary);
+  }
+  

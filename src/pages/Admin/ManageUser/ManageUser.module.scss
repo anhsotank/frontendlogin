@@ -1,8 +1,7 @@
 .wrapper {
   padding: 2rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: var(--body_background);  border-radius: 12px;
+  box-shadow: var(--shadow);
   width: 120%;
 
 }
@@ -11,7 +10,7 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: var(--text-color);
 }
 
 .search {
@@ -33,13 +32,14 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  background: var(--body_background);
 }
 
 .user-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
+  background: var(--body_background);
   padding: 12px 16px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -47,7 +47,8 @@
 
   span {
     font-weight: 500;
-    color: #111827;
+    color: var(--text-color);
+
   }
 }
 

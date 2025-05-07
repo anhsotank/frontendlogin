@@ -1,0 +1,16 @@
+.wrapper {
+    width: 100%;
+    margin-top: 20px;
+}
+.Movies {
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-content: space-around;
+}
+h2 {
+    text-align: center;
+    color: var(--blue);
+    font-weight: 900;
+    opacity: 0.7;
+}

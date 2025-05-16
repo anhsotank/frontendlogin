@@ -11,7 +11,7 @@ ReactDOM.render(
   <Provider store={store}>
     <GlobalStyles>
       <App />
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={1500} />
     </GlobalStyles>
   </Provider>,
   document.getElementById("root")

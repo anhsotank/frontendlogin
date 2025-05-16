@@ -90,6 +90,15 @@ function UserList() {
           (user) =>
             user?.isAdmin || (
               <li key={user._id} className={cx("user-item")}>
+                <img
+                  src={
+                    user.image
+                      ? `/uploads/${user.image}`
+                      : "https://avatar-ex-swe.nixcdn.com/avatar/2022/08/23/b/8/3/d/1661244166367.jpg"
+                  }
+                  alt="Avatar"
+                  className={cx("avatar")}
+                />
                 <span>{user.username}</span>
                 <button
                   className={cx("delete-btn")}

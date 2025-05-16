@@ -67,8 +67,9 @@ function Movie() {
             </Tippy>
             {Movie?.genre ? <span>genre : {Movie?.genre?.name}</span> : ""}
             <div className={cx("view-Movie")}>
+              <span>{Movie?.views}</span>
+
               <FontAwesomeIcon icon={faEye} />
-              {Movie?.views}
             </div>
           </div>
         </header>
@@ -86,7 +87,7 @@ function Movie() {
         </div>
         <iframe
           className={cx("play-movie")}
-          width="780"
+          width="920"
           height="500"
           src={Movie?.srcVideo}
           title="YouTube video player"

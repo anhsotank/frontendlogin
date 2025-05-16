@@ -17,11 +17,14 @@ import {
   ManageActor,
   Dashboard,
 } from "../pages/Admin";
+import Profile from "../pages/Profile/Profile";
 
 const publicroutes = [
   { path: config.routes.home, component: Home },
   { path: config.routes.following, component: Following },
   { path: config.routes.update, component: Update, layout: HeaderOnly },
+  { path: config.routes.profile, component: Profile, layout: HeaderSidebar },
+
   { path: config.routes.movie, component: Movie, layout: HeaderSidebar },
   { path: config.routes.genre, component: Genre, layout: HeaderOnly },
   { path: config.routes.login, component: Login, layout: null },

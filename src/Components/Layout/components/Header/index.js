@@ -23,7 +23,7 @@ import Button from "../../../Button";
 import Menu from "../../../Popper/Menu";
 import Search from "../Search";
 import { Link } from "react-router-dom";
-import { getAllGenres } from "../../../../rudux/apiRequest";
+import { getAllGenres, getProfile } from "../../../../rudux/apiRequest";
 import DarkMode from "../../../DarkMode";
 
 const cx = classNames.bind(styles);
@@ -31,13 +31,16 @@ const cx = classNames.bind(styles);
 function Header() {
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const listgenres = useSelector((state) => state.genres.genres?.allgenres);
+  const profile = useSelector((state) => state.users.users?.profile);
+
   console.log(listgenres);
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchGenres = async () => {
+    const fetch = async () => {
       await getAllGenres(dispatch);
+      await getProfile(currentUser?.accessToken, dispatch);
     };
-    fetchGenres();
+    fetch();
   }, [dispatch]);
   const menu_item = [
     {
@@ -71,7 +74,7 @@ function Header() {
     {
       icon: <FontAwesomeIcon icon={faUser} />,
       title: ` ${currentUser?.username}`,
-      to: "/anh",
+      to: "/profile",
     },
     {
       icon: <FontAwesomeIcon icon={faCoins} />,
@@ -146,10 +149,19 @@ function Header() {
           >
             {currentUser ? (
               <img
+                src={
+                  profile?.image
+                    ? `/uploads/${profile?.image}`
+                    : "https://avatar-ex-swe.nixcdn.com/avatar/2022/08/23/b/8/3/d/1661244166367.jpg"
+                }
+                alt="Avatar"
                 className={cx("user-avata")}
-                src="https://avatar-ex-swe.nixcdn.com/avatar/2022/08/23/b/8/3/d/1661244166367.jpg"
               />
             ) : (
+              // <img
+              //   className={cx("user-avata")}
+              //   src="https://avatar-ex-swe.nixcdn.com/avatar/2022/08/23/b/8/3/d/1661244166367.jpg"
+              // />
               <button className={cx("btn-more")}>
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </button>

@@ -24,6 +24,12 @@ import {
   getUsersFailed,
   getUsersStart,
   getUsersSuccess,
+  getProfileStart,
+  getProfileSuccess,
+  getProfileFailed,
+  updateProfileStart,
+  updateProfileSuccess,
+  updateProfileFailed,
 } from "./userSlice";
 
 import {
@@ -181,6 +187,45 @@ export const deleteUser = async (accessToken, dispatch, id) => {
   }
 };
 
+export const getProfile = async (accessToken, dispatch) => {
+  dispatch(getProfileStart());
+  try {
+    const res = await axios.get("/v1/user/profile", {
+      headers: { token: `Bearer ${accessToken}` },
+    });
+    dispatch(getProfileSuccess(res.data));
+  } catch (err) {
+    dispatch(getProfileFailed());
+  }
+};
+
+export const updateProfile = async (data, accessToken, dispatch) => {
+  dispatch(updateProfileStart());
+  try {
+    const res = await axios.put("/v1/user/update", data, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    dispatch(updateProfileSuccess(res.data));
+    getProfile(accessToken, dispatch);
+  } catch (err) {
+    dispatch(updateProfileFailed());
+  }
+};
+
+export const changePassword = async (data, accessToken) => {
+  try {
+    await axios.put("/v1/user/password", data, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+  } catch (err) {
+    console.error("đổi mật khẩu thất bại:", err);
+  }
+};
 export const logOut = async (dispatch, navigate) => {
   dispatch(logOutStart());
   try {
@@ -310,6 +355,7 @@ export const addComment = async (comment, accessToken, id, dispatch) => {
     dispatch(addcommentsSuccess(res.data));
   } catch (err) {
     dispatch(addcommentsFailed());
+    toast.error("đăng nhập để bình luận");
   }
 };
 
@@ -475,7 +521,7 @@ export const addActor = async (data, accessToken, dispatch) => {
     getAllactors(dispatch);
   } catch (err) {
     dispatch(addActorsFailed());
-    toast.success("Thêm phim thất bại!");
+    toast.success("Thêm diễn viên thất bại!");
   }
 };
 
@@ -483,7 +529,10 @@ export const deleteActor = async (id, accessToken, dispatch) => {
   dispatch(deleteActorsStart());
   try {
     const res = await axios.delete("/v1/actor/deleteactor/" + id, {
-      headers: { token: `Bearer ${accessToken}` },
+      headers: {
+        token: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
     });
     dispatch(deleteActorsSuccess(res.data));
     getAllactors(dispatch);
@@ -491,12 +540,13 @@ export const deleteActor = async (id, accessToken, dispatch) => {
     dispatch(deleteActorsFailed(err.response.data));
   }
 };
-export const updateActor = async (id, actor, accessToken, dispatch) => {
+export const updateActor = async (id, data, accessToken, dispatch) => {
   dispatch(updateActorsStart());
   try {
-    const res = await axios.put("/v1/actor/updateactor/" + id, actor, {
+    const res = await axios.put("/v1/actor/updateactor/" + id, data, {
       headers: {
         token: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
       },
     });
     dispatch(updateActorsSuccess(res.data));

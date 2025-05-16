@@ -5,9 +5,11 @@ const userSlice = createSlice({
   initialState: {
     users: {
       allUsers: null,
+      profile: null,
       isfetching: false,
       error: false,
     },
+
     msg: "",
   },
   reducers: {
@@ -35,6 +37,32 @@ const userSlice = createSlice({
       state.users.error = true;
       state.msg = action.payload;
     },
+
+    //Profile
+    getProfileStart: (state) => {
+      state.users.isfetching = true;
+    },
+    getProfileSuccess: (state, action) => {
+      state.users.isfetching = false;
+      state.users.profile = action.payload;
+    },
+    getProfileFailed: (state) => {
+      state.users.isfetching = false;
+      state.users.error = true;
+    },
+
+    updateProfileStart: (state) => {
+      state.users.isfetching = true;
+    },
+    updateProfileSuccess: (state, action) => {
+      state.users.isfetching = false;
+      state.msg = action.payload;
+    },
+    updateProfileFailed: (state, action) => {
+      state.users.isfetching = false;
+      state.users.error = true;
+      state.msg = action.payload;
+    },
   },
 });
 
@@ -45,6 +73,12 @@ export const {
   deleteUsersStart,
   deleteUsersSuccess,
   deleteUsersFailed,
+  getProfileStart,
+  getProfileSuccess,
+  getProfileFailed,
+  updateProfileStart,
+  updateProfileSuccess,
+  updateProfileFailed,
 } = userSlice.actions;
 
 export default userSlice.reducer;

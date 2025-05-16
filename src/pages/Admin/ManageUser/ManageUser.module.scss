@@ -50,6 +50,14 @@
     color: var(--text-color);
 
   }
+  .avatar{
+    box-shadow: var(--shadow);
+    border-radius: 50px;
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    object-position: 30% 20%;
+  }
 }
 
 .delete-btn {

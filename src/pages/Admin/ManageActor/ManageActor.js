@@ -94,25 +94,36 @@ function ActorList() {
 
   const handleFormSubmit = async (formData) => {
     const data = new FormData();
-    console.log("formData", formData);
     data.append("name", formData.name);
     data.append("bio", formData.bio);
 
+    // Chỉ thêm 1 lần ảnh
     if (formData.image instanceof File) {
       data.append("image", formData.image);
-    }
-    console.log("formData", data);
-
-    if (editData) {
-      await updateActor(editData._id, data, currentUser?.accessToken, dispatch);
-      toast.success("Cập nhật phim thành công!");
-    } else {
-      await addActor(data, currentUser?.accessToken, dispatch);
-      toast.success("Thêm phim thành công!");
+    } else if (editData?.image) {
+      data.append("image", editData.image);
     }
 
-    setEditData(null);
-    setVisible(false);
+    try {
+      if (editData) {
+        await updateActor(
+          editData._id,
+          data,
+          currentUser?.accessToken,
+          dispatch
+        );
+        toast.success("Cập nhật diễn viên thành công!");
+      } else {
+        await addActor(data, currentUser?.accessToken, dispatch);
+        toast.success("Thêm diễn viên thành công!");
+      }
+
+      setEditData(null);
+      setVisible(false);
+    } catch (err) {
+      toast.error("Lỗi khi gửi dữ liệu!");
+      console.error(err);
+    }
   };
 
   const renderForm = (attrs) => (

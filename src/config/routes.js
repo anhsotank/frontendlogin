@@ -5,6 +5,7 @@ const routes = {
   login: "/login",
   register: "/register",
   live: "/live",
+  profile: "profile",
   movie: "/movie/:id",
   genre: "/genre/:id",
   manageuser: "/manageuser",

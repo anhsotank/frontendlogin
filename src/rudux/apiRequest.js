@@ -33,6 +33,9 @@ import {
 } from "./userSlice";
 
 import {
+  getrecommentMoviesFailed,
+  getrecommentMoviesStart,
+  getrecommentMoviesSuccess,
   getoneMoviesStart,
   getoneMoviesSuccess,
   getoneMoviesFailed,
@@ -66,7 +69,7 @@ import {
   updatecommentsStart,
   updatecommentsSuccess,
   updatecommentsFailed,
-} from "./commentSlide";
+} from "./commentSlice";
 
 import {
   addfavoritesStart,
@@ -78,7 +81,7 @@ import {
   deletefavoritesStart,
   deletefavoritesSuccess,
   deletefavoritesFailed,
-} from "./favoriteSlide";
+} from "./favoriteSlice";
 
 import {
   getMoviesbyGenreFailed,
@@ -113,6 +116,18 @@ import {
   updateActorsFailed,
 } from "./actorSlice";
 
+import {
+  addhistorysStart,
+  addhistorysSuccess,
+  addhistorysFailed,
+  gethistorysFailed,
+  gethistorysStart,
+  gethistorysSuccess,
+  deletehistorysStart,
+  deletehistorysSuccess,
+  deletehistorysFailed,
+} from "./historySlice";
+
 export const loginUser = async (user, dispatch, navigate) => {
   console.log(user);
   dispatch(loginStart());
@@ -140,7 +155,7 @@ export const loginFacebook = async (user, dispatch, navigate) => {
   try {
     const res = await axios.post(
       "http://localhost:8300/v1/auth/facebook",
-      user
+      user,
     );
     dispatch(loginFBSuccess(res.data));
     navigate("/");
@@ -236,6 +251,24 @@ export const logOut = async (dispatch, navigate) => {
     navigate("/login");
   } catch (err) {
     dispatch(logOutFailed());
+  }
+};
+
+// Movie
+
+export const getRecommentMovies = async (dispatch, accessToken) => {
+  dispatch(getrecommentMoviesStart());
+
+  try {
+    const res = await axios.get("/v1/recomment/", {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+
+    dispatch(getrecommentMoviesSuccess(res.data));
+  } catch (err) {
+    dispatch(getrecommentMoviesFailed());
   }
 };
 
@@ -350,7 +383,7 @@ export const addComment = async (comment, accessToken, id, dispatch) => {
       comment,
       {
         headers: { token: `Bearer ${accessToken}` },
-      }
+      },
     );
     dispatch(addcommentsSuccess(res.data));
   } catch (err) {
@@ -375,7 +408,7 @@ export const updateComment = async (
   commentId,
   editedContent,
   accessToken,
-  dispatch
+  dispatch,
 ) => {
   dispatch(updatecommentsStart());
   console.log(editedContent);
@@ -385,7 +418,7 @@ export const updateComment = async (
       { text: editedContent },
       {
         headers: { token: `Bearer ${accessToken}` },
-      }
+      },
     );
     dispatch(updatecommentsSuccess(res.data));
   } catch (err) {
@@ -415,7 +448,7 @@ export const addfavorite = async (id, accessToken, dispatch) => {
       {}, // body rỗng vì không cần gửi gì
       {
         headers: { token: `Bearer ${accessToken}` },
-      }
+      },
     );
     dispatch(addfavoritesSuccess(res.data));
     await getAllfavorite(dispatch, accessToken);
@@ -554,5 +587,62 @@ export const updateActor = async (id, data, accessToken, dispatch) => {
   } catch (err) {
     dispatch(updateActorsFailed(err.response.data));
     toast.success("cập nhật phim thất bại !");
+  }
+};
+
+//history user
+
+// Get watch history
+export const getWatchHistory = async (dispatch, accessToken) => {
+  dispatch(gethistorysStart());
+
+  try {
+    const res = await axios.get("/v1/watchHistory", {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+
+    dispatch(gethistorysSuccess(res.data));
+  } catch (err) {
+    dispatch(gethistorysFailed());
+  }
+};
+
+// Add watch history
+export const addWatchHistory = async (movieId, accessToken, dispatch) => {
+  dispatch(addhistorysStart());
+
+  try {
+    const res = await axios.post(
+      `/v1/watchHistory/${movieId}`,
+      {},
+      {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    dispatch(addhistorysSuccess(res.data));
+  } catch (err) {
+    dispatch(addhistorysFailed());
+  }
+};
+
+//Delete watch history
+export const deleteWatchHistory = async (historyId, accessToken, dispatch) => {
+  dispatch(deletehistorysStart());
+
+  try {
+    await axios.delete(`/watch-history/${historyId}`, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+
+    dispatch(deletehistorysSuccess(historyId));
+  } catch (err) {
+    dispatch(deletehistorysFailed());
   }
 };

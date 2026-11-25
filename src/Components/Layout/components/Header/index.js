@@ -6,6 +6,7 @@ import {
   faCaretDown,
   faCircleQuestion,
   faCloudArrowUp,
+  faClockRotateLeft,
   faCoins,
   faEarthAsia,
   faEllipsisVertical,
@@ -75,6 +76,11 @@ function Header() {
       icon: <FontAwesomeIcon icon={faUser} />,
       title: ` ${currentUser?.username}`,
       to: "/profile",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faClockRotateLeft} />,
+      title: "History",
+      to: "/history",
     },
     {
       icon: <FontAwesomeIcon icon={faCoins} />,

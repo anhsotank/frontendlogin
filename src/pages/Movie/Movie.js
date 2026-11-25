@@ -11,7 +11,11 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useColor } from "../../hooks";
-import { getoneMovie, increaseView } from "../../rudux/apiRequest";
+import {
+  getoneMovie,
+  increaseView,
+  addWatchHistory,
+} from "../../rudux/apiRequest";
 import Comment from "../../Components/Comment/comment";
 import Heart from "../../Components/Heart";
 
@@ -23,12 +27,15 @@ function Movie() {
   const [Movie, setMovie] = useState(null);
   const color = useColor(id);
   const oneMovie = useSelector((state) => state.movies.onemovies?.oneMovies);
+  const user = useSelector((state) => state.auth.login?.currentUser);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    addWatchHistory(id, user?.accessToken, dispatch);
     increaseView(dispatch, id);
     getoneMovie(dispatch, id);
-  }, [id, dispatch]);
+  }, [id, dispatch, user?.accessToken]);
 
   useEffect(() => {
     if (oneMovie) {

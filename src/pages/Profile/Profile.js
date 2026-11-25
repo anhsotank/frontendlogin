@@ -10,14 +10,18 @@ import {
   getProfile,
   changePassword,
 } from "../../rudux/apiRequest";
+import { getWatchHistory } from "../../rudux/apiRequest";
 
 const cx = classNames.bind(styles);
 
 function Profile() {
   const user = useSelector(
-    (state) => state.auth.login?.currentUser || state.auth.loginFB?.currentUser
+    (state) => state.auth.login?.currentUser || state.auth.loginFB?.currentUser,
   );
   const profile = useSelector((state) => state.users.users?.profile);
+  const historys = useSelector(
+    (state) => state.historys.historys?.allhistorys || [],
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [editData, setEditData] = useState({
@@ -39,18 +43,19 @@ function Profile() {
       return;
     }
 
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
         await getProfile(user.accessToken, dispatch);
+        await getWatchHistory(dispatch, user.accessToken); // lấy lịch sử xem
       } catch (error) {
-        toast.error("Không thể tải thông tin hồ sơ!");
+        toast.error("Không thể tải dữ liệu!");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchData();
   }, [user, dispatch, navigate]);
 
   // Sync editData when profile changes
@@ -99,7 +104,7 @@ function Profile() {
         setIsLoading(false);
       }
     },
-    [dispatch, user, editData.image]
+    [dispatch, user, editData.image],
   );
 
   const handleChangePassword = async (e) => {
@@ -281,6 +286,41 @@ function Profile() {
             </div>
           </div>
         </div>
+      </div>
+      <div className={cx("watch-history")}>
+        <h2>Lịch sử xem</h2>
+
+        {historys.length === 0 ? (
+          <p>Bạn chưa xem phim nào</p>
+        ) : (
+          <div className={cx("history-list")}>
+            {historys.map((item) => (
+              <div key={item._id} className={cx("history-item")}>
+                <img
+                  src={`http://localhost:8300/uploads/${item.movieId?.image}`}
+                  alt={item.movieId?.moviename}
+                  className={cx("history-image")}
+                />
+
+                <div className={cx("history-info")}>
+                  <p className={cx("history-title")}>
+                    {item.movieId?.moviename}
+                  </p>
+                  <p className={cx("history-time")}>
+                    {new Date(item.createdAt).toLocaleString()}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => navigate(`/movie/${item.movieId?._id}`)}
+                  className={cx("watch-btn")}
+                >
+                  Xem lại
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

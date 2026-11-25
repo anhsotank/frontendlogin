@@ -8,6 +8,7 @@ const routes = {
   profile: "profile",
   movie: "/movie/:id",
   genre: "/genre/:id",
+
   manageuser: "/manageuser",
   managemovie: "/managemovie",
   managegenre: "/managegenre",

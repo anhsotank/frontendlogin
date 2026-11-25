@@ -46,7 +46,7 @@ function MoviesList() {
 
   return (
     <div className={cx("wrapper")}>
-      <h1>List Moviess</h1>
+      <h1>Danh sách phim</h1>
       <div className={cx("Movies")}>
         {load &&
           listMovie?.map((data) => <MovieItem key={data._id} data={data} />)}

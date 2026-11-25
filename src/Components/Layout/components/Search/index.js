@@ -21,41 +21,51 @@ const cx = classNames.bind(styles);
 function Search() {
   const [searchValue, setSearchValue] = useState("");
   const [searchResultMovie, setSearchResultMovie] = useState([]);
-  const [showResult, setShowResult] = useState(true);
+  // khởi tạo false — popup chỉ hiện khi user focus và có value
+  const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const debounced = useDebounce(searchValue, 700);
   const inputRef = useRef();
   const dispatch = useDispatch();
 
-  // Đảm bảo state đúng với Redux slice
+  // Kết quả tìm kiếm lưu ở Redux; có thể là mảng rỗng
   const listMovie = useSelector(
-    (state) => state.movies?.searchmovies?.resultMovies
+    (state) => state.movies?.searchmovies?.resultMovies,
   );
-
-  console.log("Kết quả tìm kiếm từ Redux:", listMovie);
 
   useEffect(() => {
     if (!debounced.trim()) {
       setSearchResultMovie([]);
+      setLoading(false);
       return;
     }
 
     setLoading(true);
+    // gọi action async; kết quả sẽ cập nhật Redux slice
     searchMovie(debounced, dispatch).then(() => setLoading(false));
   }, [debounced, dispatch]);
 
+  // Đồng bộ result từ Redux vào local
   useEffect(() => {
     setSearchResultMovie(listMovie || []);
-  }, [listMovie]);
+    // ẩn popup nếu không có value hoặc kết quả rỗng
+    if (!searchValue.trim() || !(listMovie && listMovie.length > 0)) {
+      setShowResult(false);
+    }
+  }, [listMovie, searchValue]);
 
   return (
     <div>
       <HeadlessTippy
-        visible={showResult && searchResultMovie?.length > 0}
+        visible={
+          showResult &&
+          searchValue.trim().length > 0 &&
+          searchResultMovie?.length > 0
+        }
         interactive
-        render={(atb) => (
-          <div className={cx("search-result")} tabIndex="-1" {...atb}>
+        render={(attrs) => (
+          <div className={cx("search-result")} tabIndex="-1" {...attrs}>
             <PopperWrapper>
               <h3 className={cx("title-account")}>Movie Recommendations</h3>
               {searchResultMovie?.map((result) => (
@@ -73,8 +83,22 @@ function Search() {
             type="text"
             placeholder="Search movies..."
             spellCheck="false"
-            onChange={(e) => setSearchValue(e.target.value)}
-            onFocus={() => setShowResult(true)}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              // nếu input có text, bật showResult để chờ kết quả
+              if (e.target.value.trim()) {
+                setShowResult(true);
+              } else {
+                setShowResult(false);
+                setSearchResultMovie([]);
+              }
+            }}
+            onFocus={() => {
+              // chỉ show khi có giá trị
+              if (searchValue.trim() && searchResultMovie.length > 0) {
+                setShowResult(true);
+              }
+            }}
           />
           {!!searchValue && !loading && (
             <button
@@ -82,6 +106,7 @@ function Search() {
               onClick={() => {
                 setSearchValue("");
                 setSearchResultMovie([]);
+                setShowResult(false);
                 inputRef.current.focus();
               }}
             >
@@ -92,7 +117,10 @@ function Search() {
           {loading && (
             <FontAwesomeIcon className={cx("loading")} icon={faSpinner} />
           )}
-          <button className={cx("search-btn")}>
+          <button
+            className={cx("search-btn")}
+            onMouseDown={(e) => e.preventDefault()} // ngăn form submit nếu trong form
+          >
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>

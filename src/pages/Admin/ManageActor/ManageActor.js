@@ -78,7 +78,7 @@ function ActorList() {
     setSearchTerm(value);
     setCurrentPage(0);
     const filtered = listactors?.filter((actor) =>
-      actor?.name?.toLowerCase()?.includes(value)
+      actor?.name?.toLowerCase()?.includes(value),
     );
     setFilteredactors(filtered);
   };
@@ -110,7 +110,7 @@ function ActorList() {
           editData._id,
           data,
           currentUser?.accessToken,
-          dispatch
+          dispatch,
         );
         toast.success("Cập nhật diễn viên thành công!");
       } else {
@@ -139,8 +139,8 @@ function ActorList() {
   const actorFields = [
     {
       name: "name",
-      label: "Tên thể loại",
-      placeholder: "Nhập tên thể loại...",
+      label: "Tên diễn viên",
+      placeholder: "Nhập tên diễn viên...",
       required: true,
     },
     {

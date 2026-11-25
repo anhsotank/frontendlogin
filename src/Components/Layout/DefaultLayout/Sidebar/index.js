@@ -20,12 +20,12 @@ function Sidebar({ role }) {
   const menu_item = [
     {
       icon: <FontAwesomeIcon icon={faHome} />,
-      title: "For Your",
+      title: "Trang chủ",
       to: config.routes.home,
     },
     {
       icon: <FontAwesomeIcon icon={faUser} />,
-      title: "Follwing",
+      title: "Theo dõi",
       to: config.routes.following,
     },
     {
@@ -38,27 +38,27 @@ function Sidebar({ role }) {
   const adminmenu_item = [
     {
       icon: <FontAwesomeIcon icon={faChartSimple} />,
-      title: "Dashboard",
+      title: "Thống kê",
       to: config.routes.dashboard,
     },
     {
       icon: <FontAwesomeIcon icon={faUser} />,
-      title: "manage users",
+      title: "Quản lý người dùng",
       to: config.routes.manageuser,
     },
     {
       icon: <FontAwesomeIcon icon={faFilm} />,
-      title: "manage movies",
+      title: "Quản lý phim",
       to: config.routes.managemovie,
     },
     {
       icon: <FontAwesomeIcon icon={faGenderless} />,
-      title: "manage genre",
+      title: "Quản lý thể loại",
       to: config.routes.managegenre,
     },
     {
       icon: <FontAwesomeIcon icon={faUsersLine} />,
-      title: "manage actor",
+      title: "Quản lý diễn viên",
       to: config.routes.manageactor,
     },
   ];

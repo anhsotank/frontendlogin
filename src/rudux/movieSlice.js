@@ -18,6 +18,11 @@ const movieSlice = createSlice({
       isfetching: false,
       error: false,
     },
+    recommentmovies: {
+      recommentmovies: null,
+      isfetching: false,
+      error: false,
+    },
 
     msg: "",
   },
@@ -32,6 +37,18 @@ const movieSlice = createSlice({
     getoneMoviesFailed: (state) => {
       state.onemovies.isfetching = false;
       state.onemovies.error = true;
+    },
+
+    getrecommentMoviesStart: (state) => {
+      state.recommentmovies.isfetching = true;
+    },
+    getrecommentMoviesSuccess: (state, action) => {
+      state.recommentmovies.isfetching = false;
+      state.recommentmovies.recommentmovies = action.payload;
+    },
+    getrecommentMoviesFailed: (state) => {
+      state.recommentmovies.isfetching = false;
+      state.recommentmovies.error = true;
     },
 
     getMoviesStart: (state) => {
@@ -101,6 +118,9 @@ const movieSlice = createSlice({
 });
 
 export const {
+  getrecommentMoviesFailed,
+  getrecommentMoviesStart,
+  getrecommentMoviesSuccess,
   getoneMoviesFailed,
   getoneMoviesStart,
   getoneMoviesSuccess,
